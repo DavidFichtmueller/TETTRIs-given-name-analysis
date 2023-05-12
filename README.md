@@ -195,6 +195,7 @@ SELECT ?gender ?genderLabel ?average ?sum ?count{
 LIMIT 7
 ```
 [run query](https://query.wikidata.org/#SELECT%20%3Fgender%20%3FgenderLabel%20%3Faverage%20%3Fsum%20%3Fcount%7B%0A%20%20%7B%0A%20%20SELECT%20%3Fgender%20%28SUM%28%3FnameCount%29%20as%20%3Fsum%29%20%28COUNT%28%3Fperson%29%20as%20%3Fcount%29%20%28SUM%28%3FnameCount%29%2FCOUNT%28%3Fperson%29%20as%20%3Faverage%29%20WHERE%20%7B%0A%20%20%20%20SELECT%20%3Fperson%20%3Fgender%20%28COUNT%28%3Fname%29%20as%20%3FnameCount%29%20WHERE%20%7B%0A%20%20%20%20%20%20SELECT%20%3Fperson%20%3Fgender%20%3Fname%20WHERE%20%7B%0A%20%20%20%20%20%20%20%20%3Fperson%20wdt%3AP31%20wd%3AQ5.%0A%20%20%20%20%20%20%20%20%3Fperson%20wdt%3AP21%20%3Fgender.%0A%20%20%20%20%20%20%20%20%3Fperson%20wdt%3AP735%20%3Fname%0A%20%20%20%20%20%20%7D%20LIMIT%20400000%0A%20%20%20%20%7D%20GROUP%20BY%20%3Fperson%20%3Fgender%0A%20%20%7D%20GROUP%20BY%20%3Fgender%0A%20%20%7D%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22%5BAUTO_LANGUAGE%5D%2Cen%22.%20%7D%0A%7D%20ORDER%20BY%20DESC%28%3Fsum%29%0ALIMIT%207)
+
 Result (excerpt): 
 
 |gender                                 |genderLabel|average               |sum   |count |
@@ -216,6 +217,7 @@ SELECT ?nameClass ?nameClassLabel ?count WHERE {
 } ORDER BY DESC(?count)
 ```
 [run query](https://query.wikidata.org/#SELECT%20%3FnameClass%20%3FnameClassLabel%20%3Fcount%20WHERE%20%7B%0A%20%20%7B%0A%20%20%20%20SELECT%20%3FnameClass%20%28COUNT%28%3Fname%29%20as%20%3Fcount%29%7B%0A%20%20%20%20%20%20%3Fname%20wdt%3AP31%2Fwdt%3AP279%2a%20wd%3AQ202444.%0A%20%20%20%20%20%20%3Fname%20wdt%3AP31%20%3FnameClass.%0A%20%20%20%20%7DGROUP%20BY%20%3FnameClass%0A%20%20%7D%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22%5BAUTO_LANGUAGE%5D%2Cen%22.%20%7D%0A%7D%20ORDER%20BY%20DESC%28%3Fcount%29)
+
 Result (excerpt): 
 
 |nameClass                               |nameClassLabel    |count|
@@ -235,6 +237,7 @@ SELECT (COUNT(?name) as ?count) WHERE {
 }
 ```
 [run query](https://query.wikidata.org/#SELECT%20%28COUNT%28%3Fname%29%20as%20%3Fcount%29%20WHERE%20%7B%0A%20%20%20%20%3Fname%20wdt%3AP31%2Fwdt%3AP279%2a%20wd%3AQ202444.%0A%7D)
+
 Result: 105278
 
 ## 4: Number of different nameLabel and language combinations <span id="q4"></span>
@@ -249,6 +252,7 @@ SELECT (COUNT(?nameString) as ?count) WHERE {
 }
 ```
 [run query](https://query.wikidata.org/#SELECT%20%28COUNT%28%3FnameString%29%20as%20%3Fcount%29%20WHERE%20%7B%0A%20%20%7B%0A%20%20%20%20SELECT%20DISTINCT%20%3FnameString%7B%0A%20%20%20%20%20%20%3Fname%20wdt%3AP31%2Fwdt%3AP279%2a%20wd%3AQ202444.%0A%20%20%20%20%20%20%3Fname%20wdt%3AP1705%20%3FnameString.%0A%20%20%20%20%7D%0A%20%20%7D%0A%7D)
+
 Result: 84360
 
 ## 5: Number of persons in Wikidata <span id="q5"></span>
@@ -258,6 +262,7 @@ SELECT (COUNT(?person) as ?count) WHERE {
 }
 ```
 [run query](https://query.wikidata.org/#SELECT%20%28COUNT%28%3Fperson%29%20as%20%3Fcount%29%20WHERE%20%7B%0A%20%20%20%20%20%20%3Fperson%20wdt%3AP31%20wd%3AQ5.%0A%7D)
+
 Result: 10593532
 
 ## 6: Number of persons in Wikidata without modelled given names <span id="q6"></span>
@@ -287,6 +292,7 @@ ORDER BY DESC(?count) ASC(?nameLabel)
 LIMIT 15000
 ```
 [run query](https://query.wikidata.org/#SELECT%20%3FnameLabel%20%3FnameLang%20%28SUM%28%3FcountName%29%20as%20%3Fcount%29%20WHERE%20%7B%0A%20%20%7B%0A%20%20%20%20SELECT%20%3Fname%20%28COUNT%28%3Fperson%29%20as%20%3FcountName%29%20WHERE%20%7B%0A%20%20%20%20%20%20%3Fname%20wdt%3AP31%2Fwdt%3AP279%2a%20wd%3AQ202444.%0A%20%20%20%20%20%20%3Fperson%20wdt%3AP735%20%3Fname.%0A%20%20%20%20%7DGROUP%20BY%20%3Fname%0A%20%20%20%20ORDER%20BY%20DESC%28%3FcountName%29%0A%20%20%20%20%23LIMIT%20100000%0A%20%20%7D%0A%20%20%3Fname%20wdt%3AP1705%20%3FnameLabel.%0A%20%20BIND%28LANG%28%3FnameLabel%29%20as%20%3FnameLang%29.%0A%7DGROUP%20BY%20%3FnameLabel%20%3FnameLang%0AORDER%20BY%20DESC%28%3Fcount%29%20ASC%28%3FnameLabel%29%0ALIMIT%2015000%0A%20%20)
+
 Result (first 6 rows): 
 
 |nameLabel|nameLang|count |
@@ -297,8 +303,6 @@ Result (first 6 rows):
 |Robert   |mul     |69298 |
 |Thomas   |mul     |64020 |
 |James    |en      |60024 |
-
-
 
 
 ## 8: Gender distribution per name <span id="q8"></span>
@@ -339,6 +343,7 @@ SELECT ?name ?nameLabel ?class ?classLabel ?gender ?count WHERE {
 }ORDER BY ?class DESC(?count)
 ```
 [run query](https://query.wikidata.org/#SELECT%20%3Fname%20%3FnameLabel%20%3Fclass%20%3FclassLabel%20%3Fgender%20%3Fcount%20WHERE%20%7B%0A%20%20%7B%0A%20%20%20%20SELECT%20%3Fname%20%3Fclass%20%3Fgender%20%28COUNT%28%3Fperson%29%20as%20%3Fcount%29%20WHERE%20%7B%0A%20%20%20%20%20%20BIND%28%22George%22%40mul%20as%20%3FnameString%29.%0A%20%20%20%20%20%20%3Fname%20wdt%3AP31%2Fwdt%3AP279%2a%20wd%3AQ202444.%0A%20%20%20%20%20%20%3Fname%20wdt%3AP31%20%3Fclass.%20%0A%20%20%20%20%20%20%3Fname%20wdt%3AP1705%20%3FnameString.%0A%20%20%20%20%20%20%23%3Fname%20wdt%3AP1705%20%3Flabel.%0A%20%20%20%20%20%20%23FILTER%28STR%28%3Flabel%29%20%3D%20%3FnameString%29.%0A%20%20%20%20%20%20%3Fperson%20wdt%3AP735%20%3Fname.%0A%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%3Fperson%20wdt%3AP21%20wd%3AQ6581097.%0A%20%20%20%20%20%20%20%20BIND%28%22male%22%20as%20%3Fgender%29.%0A%20%20%20%20%20%20%7DUNION%7B%0A%20%20%20%20%20%20%20%20%3Fperson%20wdt%3AP21%20wd%3AQ6581072.%0A%20%20%20%20%20%20%20%20BIND%28%22female%22%20as%20%3Fgender%29.%0A%20%20%20%20%20%20%7DUNION%7B%0A%20%20%20%20%20%20%20%20%3Fperson%20wdt%3AP21%20%5B%5D.%0A%20%20%20%20%20%20%20%20MINUS%7B%0A%20%20%20%20%20%20%20%20%20%20%3Fperson%20wdt%3AP21%20wd%3AQ6581097.%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20MINUS%7B%0A%20%20%20%20%20%20%20%20%20%20%3Fperson%20wdt%3AP21%20wd%3AQ6581072.%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20BIND%28%22other%22%20as%20%3Fgender%29.%0A%20%20%20%20%20%20%7DUNION%7B%0A%20%20%20%20%20%20%20%20FILTER%20NOT%20EXISTS%20%7B%3Fperson%20wdt%3AP21%20%5B%5D.%7D%0A%20%20%20%20%20%20%20%20BIND%28%22unspecified%22%20as%20%3Fgender%29.%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%7DGROUP%20BY%20%3Fname%20%3Fclass%20%3Fgender%0A%20%20%7D%0A%20%20%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22%5BAUTO_LANGUAGE%5D%2Cen%22.%20%7D%0A%7DORDER%20BY%20%3Fclass%20DESC%28%3Fcount%29)
+
 Result (for the example "George"@mul from above): 
 
 |name   |nameLabel|class |classLabel                       |gender     |count|
@@ -355,7 +360,7 @@ Result (for the example "George"@mul from above):
 ```
 length(cells["nameLabel"].cross("","nameLabel").cells["count"].value)
 ```
-* Result: For most names this is one, but there are 352 rows with a value of 2 (thus 176 names that occur twice) and 24 rows with a value of 3 (8 names that occur thrice)
+Result: For most names this is one, but there are 352 rows with a value of 2 (thus 176 names that occur twice) and 24 rows with a value of 3 (8 names that occur thrice)
 
 ## 10: Combining identical name string with different language tags <span id="q10"></span>
 * for the column "count_male" apply a text transformation with the expression
@@ -402,5 +407,6 @@ sum(cell.cross("","dummy").cells["count"].value))
 ```
 * in the preview for any of the rows, the sum of all of the values is now shows
 * the new column doesn't need to be created
-* Result: 7911495
+
+Result: 7911495
 
