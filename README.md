@@ -1,3 +1,4 @@
+# Introduction
 Within the description of the TETTRIs Task 3.2 "Automatic mapping of taxonomic expertise", it is stated that for the various expert groups gender balance should be one of the factors to profile for. Since the analysis on the various groups should be done automatically, it is necessary to estimate the gender balance of a group without manual curation. One approach that we are considering is to do this estimate based on the given names of the identified experts. This repository lays the ground work for such an approach.
 
 In this repository we have gathered the 15000 most prominent given names from Wikidata and calculated their prevalent gender based of the genders assigned to the people in Wikidata that have those names. 
