@@ -70,7 +70,7 @@ To understand the motivation for the next processing step, lets look at the exam
 
 
 | Item  | Description  | Native Label  | Count Male | Count Female |
-|---|---|---|
+|---|---|---|---|---|
 | [Q104804603](https://www.wikidata.org/wiki/Q104804603)  | unisex given name  | "Gabriele"@mul  | 6 | 26
 | [Q17765515](https://www.wikidata.org/wiki/Q17765515)  | male given name  | "Gabriele"@mul  | 676 | 27
 | [Q17765518](https://www.wikidata.org/wiki/Q17765518)  | female given name  | "Gabriele"@mul  | 7 | 448
