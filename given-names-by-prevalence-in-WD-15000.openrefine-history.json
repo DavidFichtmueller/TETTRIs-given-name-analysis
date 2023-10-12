@@ -255,12 +255,38 @@
       "facets": [],
       "mode": "row-based"
     },
+    "baseColumnName": "nameLabel_count",
+    "expression": "grel:\"x\"",
+    "onError": "set-to-blank",
+    "newColumnName": "dummy",
+    "columnInsertIndex": 8,
+    "description": "Create column dummy at index 8 based on column nameLabel_count using expression grel:\"x\""
+  },
+  {
+    "op": "core/column-addition",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "baseColumnName": "dummy",
+    "expression": "grel:round(sum(cell.cross(\"\",\"dummy\").cells[\"count_male\"].value)*1.0/sum(cell.cross(\"\",\"dummy\").cells[\"count_female\"].value)*10000)/10000.0",
+    "onError": "set-to-blank",
+    "newColumnName": "normalization_factor",
+    "columnInsertIndex": 9,
+    "description": "Create column normalization_factor at index 9 based on column dummy using expression grel:round(sum(cell.cross(\"\",\"dummy\").cells[\"count_male\"].value)*1.0/sum(cell.cross(\"\",\"dummy\").cells[\"count_female\"].value)*10000)/10000.0"
+  },
+  {
+    "op": "core/column-addition",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
     "baseColumnName": "count_undefined",
-    "expression": "grel:if(cells[\"count_male\"].value > cells[\"count_female\"].value + cells[\"count_other\"].value, 'male', if(cells[\"count_female\"].value > cells[\"count_male\"].value + cells[\"count_other\"].value, 'female', 'inconclusive'))",
+    "expression": "grel:if(cells[\"count_male\"].value > cells[\"count_female\"].value*cells[\"normalization_factor\"].value + cells[\"count_other\"].value, 'male', if(cells[\"count_female\"].value *cells[\"normalization_factor\"].value > cells[\"count_male\"].value + cells[\"count_other\"].value, 'female', 'inconclusive'))",
     "onError": "set-to-blank",
     "newColumnName": "prevalent_gender",
     "columnInsertIndex": 7,
-    "description": "Create column prevalent_gender at index 7 based on column count_undefined using expression grel:if(cells[\"count_male\"].value > cells[\"count_female\"].value + cells[\"count_other\"].value, 'male', if(cells[\"count_female\"].value > cells[\"count_male\"].value + cells[\"count_other\"].value, 'female', 'inconclusive'))"
+    "description": "Create column prevalent_gender at index 7 based on column count_undefined using expression grel:if(cells[\"count_male\"].value > cells[\"count_female\"].value*cells[\"normalization_factor\"].value + cells[\"count_other\"].value, 'male', if(cells[\"count_female\"].value *cells[\"normalization_factor\"].value > cells[\"count_male\"].value + cells[\"count_other\"].value, 'female', 'inconclusive'))"
   },
   {
     "op": "core/column-addition",
@@ -289,11 +315,11 @@
       "mode": "row-based"
     },
     "baseColumnName": "prevalent_gender",
-    "expression": "grel:round(cells[\"count_male\"].value*1.0/(cells[\"count_male\"].value + cells[\"count_female\"].value + cells[\"count_other\"].value)*100000)/100000.0",
+    "expression": "grel:round(cells[\"count_male\"].value*1.0/(cells[\"count_male\"].value + cells[\"count_female\"].value*cells[\"normalization_factor\"].value + cells[\"count_other\"].value)*100000)/100000.0",
     "onError": "set-to-blank",
     "newColumnName": "confidence",
     "columnInsertIndex": 8,
-    "description": "Create column confidence at index 8 based on column prevalent_gender using expression grel:round(cells[\"count_male\"].value*1.0/(cells[\"count_male\"].value + cells[\"count_female\"].value + cells[\"count_other\"].value)*100000)/100000.0"
+    "description": "Create column confidence at index 8 based on column prevalent_gender using expression grel:round(cells[\"count_male\"].value*1.0/(cells[\"count_male\"].value + cells[\"count_female\"].value*cells[\"normalization_factor\"].value + cells[\"count_other\"].value)*100000)/100000.0"
   },
   {
     "op": "core/text-transform",
@@ -322,10 +348,10 @@
       "mode": "row-based"
     },
     "columnName": "confidence",
-    "expression": "grel:round(cells[\"count_female\"].value*1.0/(cells[\"count_male\"].value + cells[\"count_female\"].value + cells[\"count_other\"].value)*100000)/100000.0",
+    "expression": "grel:round(cells[\"count_female\"].value*cells[\"normalization_factor\"].value/(cells[\"count_male\"].value + cells[\"count_female\"].value*cells[\"normalization_factor\"].value + cells[\"count_other\"].value)*100000)/100000.0",
     "onError": "keep-original",
     "repeat": false,
     "repeatCount": 10,
-    "description": "Text transform on cells in column confidence using expression grel:round(cells[\"count_female\"].value*1.0/(cells[\"count_male\"].value + cells[\"count_female\"].value + cells[\"count_other\"].value)*100000)/100000.0"
+    "description": "Text transform on cells in column confidence using expression grel:round(cells[\"count_female\"].value*cells[\"normalization_factor\"].value/(cells[\"count_male\"].value + cells[\"count_female\"].value*cells[\"normalization_factor\"].value + cells[\"count_other\"].value)*100000)/100000.0"
   }
 ]
